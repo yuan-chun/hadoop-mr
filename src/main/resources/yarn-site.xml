@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+<configuration>
+<!-- 分别指定RM的地址 -->
+    <property>
+        <name>yarn.resourcemanager.hostname.rm1</name>
+        <value>kafka002</value>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.hostname.rm2</name>
+        <value>kafka003</value>
+    </property>
+
+    <!-- 指定zk集群地址 -->
+    <property>
+        <name>yarn.resourcemanager.zk-address</name>
+        <value>kafka001:2181,kafka002:2181,kafka003:2181</value>
+    </property>
+	<!-- general config-->
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+    </property>
+	<!-- 任务运行日志 
+		 如果打开了日志聚合的选项，即yarn.log-aggregation-enable，container的日志会拷贝到hdfs上去，并从机器中删除 
+		 对于这种情况，可以使用yarn logs -applicationId 命令来查看日志
+		 因为日志是在hdfs上的，我们自然也可以通过hdfs的命令行来直接从hdfs中查看日志
+		 日志在hdfs中的目录，可以通过查看yarn.nodemanager.remote-app-log-dir和yarn.nodemanager.remote-app-log-dir-suffix属性来获知
+	-->
+    <property>
+        <name>yarn.log-aggregation-enable</name>
+        <value>true</value>
+    </property>
+	<!-- 配置日志服务器的地址,work节点使用 -->
+    <property>
+         <name>yarn.log.server.url</name>
+         <value>http://kafka001:19888/jobhistory/logs/</value>
+    </property>
+    <property>
+		<description>日志存储时间</description>
+        <name>yarn.log-aggregation.retain-seconds</name>
+        <value>864000</value>
+    </property>
+    <property>
+		<description>多长时间检查一次日志，并将满足条件的删除，如果是0或者负数，则为上一个值的十分之一</description>
+        <name>yarn.log-aggregation.retain-check-interval-seconds</name>
+        <value>86400</value>
+    </property>
+    <property>
+		<description>当应用程序运行结束后，日志被转移到的HDFS目录（启用日志聚集功能时有效）。</description>
+        <name>yarn.nodemanager.remote-app-log-dir</name>
+        <value>/hadoop-yarn/applogs</value>
+    </property>
+    <property>
+		<description>远程日志目录子目录名称（启用日志聚集功能时有效）</description>
+        <name>yarn.nodemanager.remote-app-log-dir-suffix</name>
+        <value>logs</value>
+    </property>     
+    <property>
+        <name>yarn.resourcemanager.scheduler.monitor.enable</name>
+        <value>true</value>
+    </property>
+
+<!-- resource manager ha-->
+    <!-- 开启RM高可用 -->
+    <property>
+        <name>yarn.resourcemanager.ha.enabled</name>
+        <value>true</value>
+    </property>
+    <!-- 指定RM的cluster id -->
+    <property>
+        <name>yarn.resourcemanager.cluster-id</name>
+        <value>yarn-cluster</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.zk-state-store.parent-path</name>
+        <value>/rmstore</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.ha.automatic-failover.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.ha.automatic-failover.embedded</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.ha.rm-ids</name>
+        <value>rm1,rm2</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.recovery.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.store.class</name>
+        <value>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.connect.retry-interval.ms</name>
+        <value>2000</value>
+    </property>
+    <property>
+        <name>yarn.app.mapreduce.am.scheduler.connection.wait.interval-ms</name>
+        <value>5000</value>
+    </property>
+    <!-- YARN Timeline Server-->
+    <property>
+        <name>yarn.timeline-service.enabled</name>
+        <value>false</value>
+    </property> 
+<property>
+    <name>yarn.nodemanager.vmem-check-enabled</name>
+    <value>false</value>
+</property>
+
+</configuration>
